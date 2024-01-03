@@ -1,24 +1,28 @@
-import logo from './logo.svg';
+import { Route } from 'react-router-dom';
+import { Routes } from 'react-router-dom';
 import './App.css';
-
+import Home from './user/home';
+import Login from './user/login';
+import Sigin from './user/sigin';
+import AddRecipe from './recipe/addRecipe';
+import Homepage from './user/homepage';
+// import SiginTest from './user/test';
+import AllRecipe from './recipe/allRecipe';
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Routes>
+        <Route path="/" element={<Home />}/>
+        <Route path="/home" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        {/* <Route path="/sigin" element={<SiginTest />} /> */}
+        <Route path="/sigin" element={<Sigin />} />
+        <Route path="/addRecipe" element={<AddRecipe />} />
+        <Route path="/homepage" element={<Homepage />} />
+        {/* <Route path="/getCategory" element={<getCategory />} /> */}
+        <Route path="allRecipe/" element={<AllRecipe />} />
+      </Routes>
+    </>
   );
 }
 
