@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 // import { useFrom } from 'react-hook-form';
 import { useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react'
-import { useForm } from "react-hook-form";
+import { useFieldArray, useForm } from "react-hook-form";
 
 // import { useSelector } from "react-redux/es/hooks/useSelector"
 // // import { useSelector } from "react-redux/es/hooks/useSelector";
@@ -28,7 +28,7 @@ export default function AddRecipe() {
         Ingrident: yup.array().of(yup.object
             ({
                 Name: yup.string().required("הכנס מוצר"),
-                count: yup.number().positive().min(1).required("הכנס כמות"),
+                Count: yup.number().positive().min(1).required("הכנס כמות"),
                 Type: yup.string().required("הכנס סוג כפית\כף\כוס")
             })
         ).required(),
@@ -38,6 +38,7 @@ export default function AddRecipe() {
     const recipies = useSelector(state => state.recipies);
     const userId = useSelector(state => state.userId?.Id);
     const { state } = useLocation();
+    const SelectRecipe = state;
     // const Id = state?.Id;
     const Name = state?.Name;
     const Difficulty = state?.Difficulty;
@@ -49,48 +50,83 @@ export default function AddRecipe() {
         register, handleSubmit, formState: { errors }, control
     } = useForm({
         resolver: yupResolver(schema),
-        values: {Name, Difficulty, Duration, Description, CategoryId, Img }
+        values: { Name, Difficulty, Duration, Description, CategoryId, Img }
     })
-//כאן יש קוד שאני צריכה להבין למה לעשות אותו useFieldArray
-    
+    //כאן יש קוד שאני צריכה להבין למה לעשות אותו useFieldArray
+    const { fields: Instructions, append: appendInstructions, remove: removeInstructions } = useFieldArray({
+        control, name: "Instructions"
+    });
+    const { fields: Ingrident, append: appendIngrident, remove: removeIngrident } = useFieldArray({
+        control, name: "Ingrident"
+    });
     const onSubmit = (data) => {
-        // const nameUser=JSON.parse()
-        axios.post("http://localhost:8080/api/recipe", { Name: data.Name, Difficulty: data.Difficulty, Duration: data.Duration, Description: data.Description, CategoryId: data.CategoryId, Img: data.Img }).then(d => {
-            dispatch({ type: 'ADD_RECIPE',payload:d.payload })
-            console.log("seeccsedd");
-            navigate('/allRecipe')
-        }).catch((e) => {
-            console.error(e);
-        })
+
+        console.log(data);
+        if (SelectRecipe == null) {
+            axios.post("http://localhost:8080/api/recipe", data).then(d => {
+                dispatch({ type: 'ADD_RECIPE', payload: d.payload })
+                console.log("seeccsedd");
+                navigate('/allRecipe')
+            }).catch((e) => {
+                console.error(e);
+            })
+        }
+        else {
+            axios.post('http://localhost:8080/api/recipe/edit', { ...data, UserId: SelectRecipe.userId, Id: SelectRecipe.Id }).then(
+                x => {
+                    console.lon("מה קורה באמצע החיים?")
+                    dispatch({ type: "EDIT_RECIPE", data: x.data })
+                    navigate('/allRecipe');
+                }
+            ).catch(x => { console.error(x) })
+        }
     }
     return (
         <>
-            <from onSubmit={handleSubmit(onSubmit)}>
-                <lable>שם המתכון</lable>
+            <form onSubmit={handleSubmit(onSubmit)}>
+                <label>שם המתכון</label>
                 <input {...register("Name")} />
                 <p>{errors.Name?.message}</p>
-                <lable>רמת קושי</lable>
+                <label>רמת קושי</label>
                 <input {...register("Difficulty")} />
                 <p>{errors.Difficulty?.message}</p>
-                <lable>משך זמן ההכנה</lable>
+                <label>משך זמן ההכנה</label>
                 <input {...register("Duration")} />
                 <p>{errors.Duration?.message}</p>
-                <lable> תיאור</lable>
+                <label> תיאור</label>
                 <input {...register("Description")} />
                 <p>{errors.Description?.message}</p>
-                <lable>קטגוריה</lable>
+                <label>קטגוריה</label>
                 <input type="select"{...register("CategoryId")} />
                 <p>{errors.CategoryId?.message}</p>
-                <lable>תמונה</lable>
+                <label>תמונה</label>
                 <input type="Img URL"{...register("Img")} />
                 <p>{errors.Img?.message}</p>
 
                 <div>
                     <label>Products:</label>
-
+                    {Ingrident?.map((item, index) => {
+                        <div key={index}>
+                            <input placeholder="name" {...register('Ingrident.${index}.Name')} />
+                            <input placeholder="count" {...register('Ingrident.${index}.Count')} />
+                            <input placeholder="type" {...register('Ingrident.${index}.Type')} />
+                        </div>
+                    })}
                 </div>
+                <button onClick={() => appendIngrident({ Name: "", Count: 0, Type: "" })}>הוספת מוצר</button>
+
+                <div>
+                    <label>Instructions:</label>
+                    {Instructions?.map((item, index) => {
+                        <div ket={index}>
+                            <input placeholder="הכנס פקודות להכנה" {...register('Instructions.${index}.Instructions')} />
+                        </div>
+                    })}
+                </div>
+                <button onClick={() => appendInstructions({Instructions:"" })}>הוספת הוראה</button>
+                <br/>
                 <input type="submit" />
-            </from>
+            </form>
         </>
     );
 }

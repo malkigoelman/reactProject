@@ -30,7 +30,7 @@ export default function Login() {
                 dispatch({ type: isAction.SER_USER, user: responser.data })
                 navig("/homepage")
             }).catch((i) => {
-                console.log(i.responser.data)
+                // console.log(i.responser.data)
                 navig("/sigin")
             })
     }
@@ -42,7 +42,7 @@ export default function Login() {
                 <input {...register("Username")} />
                 <p>{errors.Username?.message}</p>
 
-                <lable>סיסמה</lable>
+                <label>סיסמה</label>
                 <input {...register("Password")} />
                 <p>{errors.Password?.message}</p>
 
