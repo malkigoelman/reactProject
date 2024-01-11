@@ -8,6 +8,7 @@ import AddRecipe from './recipe/addRecipe';
 import Homepage from './user/homepage';
 // import SiginTest from './user/test';
 import AllRecipe from './recipe/allRecipe';
+import RecipePage from './recipe/recipe1';
 function App() {
   return (
     <>
@@ -21,6 +22,7 @@ function App() {
         <Route path="/homepage" element={<Homepage />} />
         {/* <Route path="/getCategory" element={<getCategory />} /> */}
         <Route path="allRecipe/" element={<AllRecipe />} />
+        <Route path="showRwcipe/" element={<RecipePage />} />
       </Routes>
     </>
   );

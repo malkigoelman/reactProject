@@ -5,7 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { useState } from "react";
 import axios from "axios";
-import { isAction } from "redux";
+import * as actions from "../store/action";
 //כניסת משתמש
 const schema = yup
     .object({
@@ -26,11 +26,12 @@ export default function Login() {
         console.log(data.Name)
         axios.post('http://localhost:8080/api/user/login', { UserName: data.UserName, Password: data.Password })
             .then((responser) => {
-                console.log(data)
-                dispatch({ type: isAction.SER_USER, user: responser.data })
+                console.log(errors)
+                dispatch({ type: actions.SET_USER, user: responser?.data })
+                alert("bgjhgfd")
                 navig("/homepage")
             }).catch((i) => {
-                // console.log(i.responser.data)
+                console.log(i.responser.data)
                 navig("/sigin")
             })
     }
@@ -47,7 +48,7 @@ export default function Login() {
                 <p>{errors.Password?.message}</p>
 
                 <Link to={"/sigin"}>להרשמה</Link><br />
-                <input type="submit" />
+                <input type="submit" onClick={()=>console.log(errors)}/>
             </form>
         </>
 

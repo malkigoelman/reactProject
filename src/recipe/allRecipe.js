@@ -1,56 +1,62 @@
-// import axios from "axios";
-// import { Image } from "../pages/img/logo.png";
-// import { useEffect, useState } from "react"
-// import { useDispatch, useSelector } from "react-redux";
-// import { useNavigate } from "react-router-dom";
-// import * as yup from "yup";
-
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import * as actions from "../store/action";
+import { Input, Segment, Select } from "semantic-ui-react";
 
 
-export default function AllRecipe(recipe) {
-    const [Category, useCategory] = useState([]);
-    const [recipies, useRecipies] = useState([]);
-    const [SelectCategory, useSelectCategory] = useState([]);
-    const [SelectDuration, useSelectDuration] = useState([]);
-    const [SelectDifficulty, useSelevtDifficulth] = useState([]);
-    const [UserRecipies, userRecipies] = useState([]);
-    // const user = useSelector(state => state.user.user);
-    const navigate = useNavigate();
+export default function AllRecipe() {
+
     const dispatch = useDispatch();
-
     useEffect(() => {
-        if (!recipe) {
-            // axios.get('http://localhost:8080/api/recipe').then(
-            // (x) => { useRecipies(r.data); })
-            // console.log(recipe);
-        }
-        else {
-            // axios.get('http://localhost:8080/api/recipe').then(
-            // (x) => { useRecipies(r.data.filter((x) => x.userId == user?.Id)) }
-            // )
-        }
-        // axios.get('http://localhost:8080/api/recipe').then(
-        // (x) => useCategory(x.data));
+        dispatch({ type: actions.SET_RECIPE_USER, data: null });
+        axios.get(`http://localhost:8080/api/recipe`)
+            .then(x => {
+                dispatch({ type: actions.SET_RECIPE, data: x.data })
+            })
+            .catch(x => {
+                console.log(x.response?.data);
+            });
     }, []);
-
-
-    //וןעדכון מתכ
-    // axios.get('http://localhost:8080/api/recipe/edit')
-    //קבלת קטגוריות
-    // axios.get('http://localhost:8080/api/category')
-    //הוספת קטגוריה
-    // axios.post('http://localhost:8080/api/category', { Id: data.Id, Name: data.Name })//אני צריכה  לקבל את האוביקט החדש
-
+    const Recipes = useSelector(state => state.Recipes);
+    const [selectCategory, SelectCategory] = useState(null);
+    const [selectDuration, SelectDuration] = useState(null);
+    const [userId, UserId] = useState(null);
+    const [selectDifficulty, SelevtDifficulth] = useState(null);
+    const ListCategory = useSelector(state => state.Category);//כאן יש שגיאה
+    const ListDifficulty = useSelector(state=>state.Difficult);
+    // const navigate = useNavigate();
     return (
         <>
-            {/* <img src={Image}></img><br/> */}
+            <Segment>
+                <Select placeholder="קטגוריה" onChange={(x, { value }) => {
+                    SelectCategory(value);
+                }}
+                    options={
+                        ListCategory.map((x) => { return { key: x.Id, text: x.Name, value: x.Id } })
+                    } 
+                    />
+                <Input
+                    placeholder="משך זמן"
+                    onChange={(x, { value }) => SelectDuration(value)}
+                />
+                <Select placeholder="רמת הקושי" onChange={(x, { value }) => {
+                    SelevtDifficulth(value);
+                }}
+                    options={
+                        ListDifficulty.map((x) => { return { key: x.Id, text: x.Name, value: x.Id } })
+                    }
+                />
+                <Input
+                    placeholder="בעל המתכון"
+                    type="number"
+                    onChange={(x, { value }) => UserId(value)}
+                />
+            </Segment>
 
 
-            <button onClick={() => (navigate('/addRecipe'), { state: null })}>להוספת מתכון</button>
+            {/* <button onClick={() => (navigate('/addRecipe'), { state: null })}>להוספת מתכון</button> */} */}
 
         </>
     );

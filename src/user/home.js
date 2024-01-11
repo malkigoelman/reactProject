@@ -8,7 +8,7 @@ const Home = () => {
             <Link to="/sigin">הרשמה</Link><br />
             {/* <Link to="/test">הרשמה</Link><br /> */}
             <Link to="/addRecipe">להוספת מתכון</Link><br />
-
+            <link to="/recipe1">לראות מתכון</link>
         </>
     );
 }

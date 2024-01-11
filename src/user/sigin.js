@@ -26,12 +26,13 @@ export default function Sigin() {
     const navig = useNavigate();
     const onSubmit = (data) => {
         console.log(data.Name)
-        axios.post('http://localhost:8080/api/user/sighin', {Username:data.Username,Password:data.Password,Name:data.Name,Phone:data.Phone,Email:data.Email,Tz:data.Tz})
+        axios.post('http://localhost:8080/api/user/sighin', {Username:data.Username,Password:data.Password,Name:data.Name,Email:data.Email,Phone:data.Phone,Tz:data.Tz})
             .then((responser) => {
                 console.log(data)
                 navig("../sigin")
             }).catch((i)=>{
-                console.log(i.responser.data)
+                // console.log(i.responser.data)
+                console.log(errors)
             })
     }
 
