@@ -13,10 +13,10 @@ export default function AllRecipe() {
         dispatch({ type: actions.SET_RECIPE_USER, data: null });
         axios.get(`http://localhost:8080/api/recipe`)
             .then(x => {
-                dispatch({ type: actions.SET_RECIPE, data: x.data })
+                dispatch({ type: actions.SET_RECIPES, data: x.data })
             })
             .catch(x => {
-                console.log(x.response?.data);
+                alert(x.response?.data);
             });
     }, []);
     const Recipes = useSelector(state => state.Recipes);
@@ -25,8 +25,7 @@ export default function AllRecipe() {
     const [userId, UserId] = useState(null);
     const [selectDifficulty, SelevtDifficulth] = useState(null);
     const ListCategory = useSelector(state => state.Category);//כאן יש שגיאה
-    const ListDifficulty = useSelector(state=>state.Difficult);
-    // const navigate = useNavigate();
+    const ListDifficulty = useSelector(state => state.Difficult);
     return (
         <>
             <Segment>
@@ -34,18 +33,22 @@ export default function AllRecipe() {
                     SelectCategory(value);
                 }}
                     options={
-                        ListCategory.map((x) => { return { key: x.Id, text: x.Name, value: x.Id } })
-                    } 
-                    />
+                        ListCategory.map((x) => { return { } })
+                        // ListCategory.map((x) => { return { key: x.Id, text: x.Name, value: x.Id } })
+                    }
+                />
+                
                 <Input
                     placeholder="משך זמן"
+                    type="number"
                     onChange={(x, { value }) => SelectDuration(value)}
                 />
                 <Select placeholder="רמת הקושי" onChange={(x, { value }) => {
-                    SelevtDifficulth(value);
+                    selectDifficulty(value);
                 }}
                     options={
-                        ListDifficulty.map((x) => { return { key: x.Id, text: x.Name, value: x.Id } })
+                        // ListDifficulty.map((x) => { return { key: x.Id, text: x.Name, value: x.Id } })
+                        ListDifficulty.map((x) => { return {} })
                     }
                 />
                 <Input
@@ -56,8 +59,7 @@ export default function AllRecipe() {
             </Segment>
 
 
-            {/* <button onClick={() => (navigate('/addRecipe'), { state: null })}>להוספת מתכון</button> */} */}
-
+            
         </>
     );
 

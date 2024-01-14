@@ -49,7 +49,7 @@ export default function reducer(state = Search, action) {
                 recipies
             }
         }
-        case actionName.SET_RECIPE: {
+        case actionName.SET_RECIPES: {
             return {
                 ...state,
                 Recipe: action.data

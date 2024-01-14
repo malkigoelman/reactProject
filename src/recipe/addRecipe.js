@@ -4,27 +4,24 @@ import * as yup from "yup";
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-// import { useFrom } from 'react-hook-form';
+import { useFrom } from 'react-hook-form';
 import { useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react'
 import { useFieldArray, useForm } from "react-hook-form";
+import * as action from "../store/action";
+import * as reducer from "../store/reducer";
 
-// import { useSelector } from "react-redux/es/hooks/useSelector"
-// // import { useSelector } from "react-redux/es/hooks/useSelector";
 export default function AddRecipe() {
 
     const schema = yup.object({
-        //אמור להיכנס לכאן לבד הקוד משתמש שעליו רשום
-        // Id: yup.number().positive().integer(),
         Name: yup.string().required(),
-        CategoryId: yup.number().required(),
-        Difficulty: yup.number().positive().integer().required(),
-        Duration: yup.number().integer().positive().required(),
+        CategoryId: yup.number().required("הכנס שם מתכון"),
+        Difficulty: yup.number().positive().integer().required("חובה לבחור רמת קושי"),
+        Duration: yup.number().positive().required("משך זמן במספרים"),
         Img: yup.string().url(),
-        Description: yup.string().required(),
-        UserId: yup.number().integer().required(),// = user.Id,
+        Description: yup.string().required("חובה להכניס תיאור"),
         Instructions: yup.array().of(yup.object().shape({ Instructions: yup.string().required("הכנס הוראות"), })),
-        Img: yup.string(URL),
+        Img: yup.string().url(),
         Ingrident: yup.array().of(yup.object
             ({
                 Name: yup.string().required("הכנס מוצר"),
@@ -35,6 +32,8 @@ export default function AddRecipe() {
     }).required();
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const [recipe,setRecipe]=useState(useSelector(state=>state.SelectRecipe));
+    const ListCategory=useSelector(state=>state.Category);
     const recipies = useSelector(state => state.recipies);
     const userId = useSelector(state => state.userId?.Id);
     const { state } = useLocation();
@@ -50,9 +49,8 @@ export default function AddRecipe() {
         register, handleSubmit, formState: { errors }, control
     } = useForm({
         resolver: yupResolver(schema),
-        values: { Name, Difficulty, Duration, Description, CategoryId, Img }
+        // values: { Name, Difficulty, Duration, Description, CategoryId, Img }
     })
-    //כאן יש קוד שאני צריכה להבין למה לעשות אותו useFieldArray
     const { fields: Instructions, append: appendInstructions, remove: removeInstructions } = useFieldArray({
         control, name: "Instructions"
     });
@@ -64,7 +62,7 @@ export default function AddRecipe() {
         console.log(data);
         if (SelectRecipe == null) {
             axios.post("http://localhost:8080/api/recipe", data).then(d => {
-                dispatch({ type: 'ADD_RECIPE', payload: d.payload })
+                dispatch({ type: action.ADD_RECIPE, payload: d.payload })
                 console.log("seeccsedd");
                 navigate('/allRecipe')
             }).catch((e) => {

@@ -9,7 +9,7 @@ import * as actions from "../store/action";
 //כניסת משתמש
 const schema = yup
     .object({
-        UserName: yup.string().required(),
+        Username: yup.string().required(),
         Password: yup.number().integer().positive().required()
     }).required()
 
@@ -24,15 +24,16 @@ export default function Login() {
     });
     const onSubmit = (data) => {
         console.log(data.Name)
-        axios.post('http://localhost:8080/api/user/login', { UserName: data.UserName, Password: data.Password })
+        axios.post('http://localhost:8080/api/user/login', { Username: data.Username, Password: data.Password })
             .then((responser) => {
-                console.log(errors)
+                alert(errors)
                 dispatch({ type: actions.SET_USER, user: responser?.data })
-                alert("bgjhgfd")
                 navig("/homepage")
             }).catch((i) => {
-                console.log(i.responser.data)
+                // console.log(i.responser.data)
                 navig("/sigin")
+                alert("bgjhgfd")
+
             })
     }
 

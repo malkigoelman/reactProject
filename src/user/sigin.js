@@ -3,6 +3,9 @@ import * as yup from "yup"
 import { useForm } from "react-hook-form"
 import { yupResolver } from "@hookform/resolvers/yup"
 import axios from 'axios';
+import React from 'react'
+import 'semantic-ui-css/semantic.min.css'
+import { GridColumn, FormInput, Button, Divider, Form, Grid, Segment, } from 'semantic-ui-react'
 //הרשמה חדשה
 //https://react.semantic-ui.com/elements/divider/#types-vertical-form
 const schema = yup
@@ -64,5 +67,7 @@ export default function Sigin() {
 
             <input type="submit" />
         </form>
+
+        
     )
 }
