@@ -8,6 +8,7 @@ const Homepage=()=>{
         <Link to="/allRecipe">מתכונים</Link><br/>
         <Link to="/addRecipe">הוספת מתכון</Link><br/>
         <Link to="/Addcategory">הוספת קטגוריה</Link><br/>
+        <Link to="/recipe1">נסיון הגלגול</Link><br/>
         <Link to="/">החלף משתמש</Link><br/>
         </>
     )

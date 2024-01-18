@@ -11,7 +11,9 @@ export const EDIT_RECIPE = "EDIT_RECIPE";
 export const DELETE_RECIPE = "DELETE_RECIPE";
 
 export const ADD_CATEGORY = "ADD_CATEGORY";
-export const GET_CATEGORY = "GET_CATEGORY";
+export const SET_CATEGORY = "SET_CATEGORY";
+
+export const ADD_PRODUCT="ADD_PRODUCT";
 
 export const RELOAD = "RELOAD";
 

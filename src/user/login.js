@@ -1,22 +1,28 @@
-import { useForm } from "react-hook-form";
+import { Form, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { useState } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import * as actions from "../store/action";
+import { Button, Divider, FormInput, Grid, GridColumn, Segment } from "semantic-ui-react";
 //כניסת משתמש
 const schema = yup
     .object({
         Username: yup.string().required(),
         Password: yup.number().integer().positive().required()
     }).required()
+export const InputRef = React.forwardRef(({ ...rest }, ref) => (
+    <input
+        {...rest}
+        ref={ref} />
+));
 
 
 export default function Login() {
 
-    const navig = useNavigate();
+    const navigate= useNavigate();
     const dispatch = useDispatch();
     const [users, setUsers] = useState([]);
     const { register, handleSubmit, formState: { errors }, control } = useForm({
@@ -28,10 +34,10 @@ export default function Login() {
             .then((responser) => {
                 alert(errors)
                 dispatch({ type: actions.SET_USER, user: responser?.data })
-                navig("/homepage")
+                navigate("/homepage")
             }).catch((i) => {
                 // console.log(i.responser.data)
-                navig("/sigin")
+                navigate("/sigin")
                 alert("bgjhgfd")
 
             })
@@ -39,18 +45,35 @@ export default function Login() {
 
     return (
         <>
-            <form onSubmit={handleSubmit(onSubmit)}>
-                <label>שם משתמש</label>
-                <input {...register("Username")} />
-                <p>{errors.Username?.message}</p>
+            <Segment onSubmit=(handleSubmit())>
+                <Grid columns={2} relaxed='very' stackable>
+                    <GridColumn>
+                        {/* <Form onSubmit={handleSubmit(onSubmit)}> */}
+                            <FormInput
+                                icon='user'
+                                iconPosition='left'
+                                label='Username'
+                                placeholder='Username'
+                            />
+                            <FormInput
+                                icon='lock'
+                                iconPosition='left'
+                                label='Password'
+                                type='password'
+                            />
+                            <Button type="submit">Login</Button>
+                        {/* </Form> */}
+                    </GridColumn>
+                    <GridColumn verticalAlign='middle'>
+                        <Button content='Sign up' icon='signup' size='big' onClick={() => navigate('/login')} />
+                    </GridColumn>
+                </Grid>
+                <Divider vertical>Or</Divider>
 
-                <label>סיסמה</label>
-                <input {...register("Password")} />
-                <p>{errors.Password?.message}</p>
+            </Segment>
 
-                <Link to={"/sigin"}>להרשמה</Link><br />
-                <input type="submit" onClick={()=>console.log(errors)}/>
-            </form>
+            {/* <Link to={"/sigin"}>להרשמה</Link><br /> */}
+            <input type="submit" onClick={() => console.log(errors)} />
         </>
 
     )

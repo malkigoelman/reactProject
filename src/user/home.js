@@ -1,16 +1,25 @@
+import React from 'react';
 import { Link } from "react-router-dom";
-const Home = () => {
+import { HeaderContent, Header, Icon, Image } from 'semantic-ui-react';
 
+const Home = () => {
+    // alert("ברוכים הבאים");
     return (
-        <>
-            <Link to="/homepage">דף הבית</Link><br />
-            <Link to="/login">כניסה</Link><br />
-            <Link to="/sigin">הרשמה</Link><br />
-            {/* <Link to="/test">הרשמה</Link><br /> */}
-            <Link to="/addRecipe">להוספת מתכון</Link><br />
-            {/* <link to="/recipe1">לראות מתכון</link> */}
-        </>
-    );
+    <>
+        <Header as='h2' icon textAlign='center'>
+            <Icon name='hand point down outline' circular />
+            {/* <p>😀</p> */}
+            <HeaderContent><Link to="/login" >כניסה</Link></HeaderContent>
+            <HeaderContent><Link to="/sigin" >הרשמה</Link></HeaderContent>
+        </Header>
+        <Image
+            centered
+            size='large'
+            src='/images/wireframe/centered-paragraph.png'
+        />
+    </>
+    )
+
 }
 export default Home;
 

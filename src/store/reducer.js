@@ -2,10 +2,11 @@ import * as actionName from './action';
 
 const Search = {
     Category: [],
+    Recipies:[],
     User: null,
-    Difficult: ["קל", "בינוני", "קשה", "קשה מאד", "קל מאד"],
-    Recipe: null,
-    Reload: false,
+    Difficult: [],
+    SelestRecipe: null,
+    ListShopping: [],
 }
 export default function reducer(state = Search, action) {
     switch (action.type) {
@@ -17,7 +18,7 @@ export default function reducer(state = Search, action) {
                 categories
             }
         }
-        case actionName.GET_CATEGORY: {
+        case actionName.SET_CATEGORY: {
             const categories = [...state.categories];
             return {
                 ...state,
@@ -61,12 +62,19 @@ export default function reducer(state = Search, action) {
                 User: action.data
             }
         }
-        case actionName.RELOAD: {
-            return {
-                ...state,
-                Reload: true
+        // case actionName.RELOAD: {
+        //     return {
+        //         ...state,
+        //         Reload: true
+        //     }
+        // }
+        case actionName.SET_RECIPE_USER:
+            {
+                return{
+                    ...state,
+                    SelestRecipe:actionName.data
+                }
             }
-        }
         default: return { ...state };
     }
 

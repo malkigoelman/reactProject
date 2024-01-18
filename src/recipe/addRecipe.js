@@ -10,8 +10,11 @@ import { useState, useEffect } from 'react'
 import { useFieldArray, useForm } from "react-hook-form";
 import * as action from "../store/action";
 import * as reducer from "../store/reducer";
+import Categories from "../category/getCategory";
+import { Input, Message, Form, ListDescription, FormGroup, Button } from "semantic-ui-react";
+import { InputRef } from "../user/login";
 
-export default function AddRecipe() {
+const AddRecipe = () => {
 
     const schema = yup.object({
         Name: yup.string().required(),
@@ -30,26 +33,10 @@ export default function AddRecipe() {
             })
         ).required(),
     }).required();
-    const navigate = useNavigate();
-    const dispatch = useDispatch();
-    const [recipe,setRecipe]=useState(useSelector(state=>state.SelectRecipe));
-    const ListCategory=useSelector(state=>state.Category);
-    const recipies = useSelector(state => state.recipies);
-    const userId = useSelector(state => state.userId?.Id);
-    const { state } = useLocation();
-    const SelectRecipe = state;
-    // const Id = state?.Id;
-    const Name = state?.Name;
-    const Difficulty = state?.Difficulty;
-    const Duration = state?.Duration;
-    const Description = state?.Description;
-    const CategoryId = state?.CategoryId;
-    const Img = state?.Img;
     const {
         register, handleSubmit, formState: { errors }, control
     } = useForm({
         resolver: yupResolver(schema),
-        // values: { Name, Difficulty, Duration, Description, CategoryId, Img }
     })
     const { fields: Instructions, append: appendInstructions, remove: removeInstructions } = useFieldArray({
         control, name: "Instructions"
@@ -57,74 +44,122 @@ export default function AddRecipe() {
     const { fields: Ingrident, append: appendIngrident, remove: removeIngrident } = useFieldArray({
         control, name: "Ingrident"
     });
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const [recipe, setRecipe] = useState(useSelector(state => state.SelectRecipe));
+    const ListCategory = useSelector(state => state.Categories);
+    const ListDifficulty = useSelector(state => state.difficulty);
+    const difficulty = useSelector(state => state.Difficulty);//Nשפט מועתק לא בטוח שנכון וטוב
+    const user = useSelector(state => state.user);
+
+    useEffect(() => {
+        recipe?.Ingrident?.map((x) => appendIngrident(x))
+        recipe?.Instructions?.map((x) => appendInstructions(x))
+    }, [recipe]);
     const onSubmit = (data) => {
 
         console.log(data);
-        if (SelectRecipe == null) {
+        if (!recipe) {
             axios.post("http://localhost:8080/api/recipe", data).then(d => {
                 dispatch({ type: action.ADD_RECIPE, payload: d.payload })
-                console.log("seeccsedd");
-                navigate('/allRecipe')
+                alert("malki");
             }).catch((e) => {
                 console.error(e);
             })
         }
         else {
-            axios.post('http://localhost:8080/api/recipe/edit', { ...data, UserId: SelectRecipe.userId, Id: SelectRecipe.Id }).then(
+            axios.post('http://localhost:8080/api/recipe/edit', { ...data, UserId: recipe.userId, Id: recipe.Id }).then(
                 x => {
-                    console.lon("מה קורה באמצע החיים?")
-                    dispatch({ type: "EDIT_RECIPE", data: x.data })
-                    navigate('/allRecipe');
+                    dispatch({ type: action.EDIT_RECIPE, data: x.data })
+                    alert("????");
                 }
             ).catch(x => { console.error(x) })
         }
+        navigate('/allRecipe');
     }
     return (
         <>
-            <form onSubmit={handleSubmit(onSubmit)}>
-                <label>שם המתכון</label>
-                <input {...register("Name")} />
-                <p>{errors.Name?.message}</p>
-                <label>רמת קושי</label>
-                <input {...register("Difficulty")} />
-                <p>{errors.Difficulty?.message}</p>
-                <label>משך זמן ההכנה</label>
-                <input {...register("Duration")} />
-                <p>{errors.Duration?.message}</p>
-                <label> תיאור</label>
-                <input {...register("Description")} />
-                <p>{errors.Description?.message}</p>
-                <label>קטגוריה</label>
-                <input type="select"{...register("CategoryId")} />
-                <p>{errors.CategoryId?.message}</p>
-                <label>תמונה</label>
-                <input type="Img URL"{...register("Img")} />
-                <p>{errors.Img?.message}</p>
-
+            <Form onSubmit={handleSubmit(onSubmit)}>
+                <Form.Field>
+                    <label>שם המתכון</label>
+                    <InputRef {...register("Name")} />
+                    {errors.Name?.message ? <Message content={errors.Name.message} /> : <></>}
+                </Form.Field>
+                <Form.Field>
+                    <label>רמת קושי</label>
+                    <select {...register("Difficulty")} name="Difficulty" defaultValue={recipe ? recipe.Difficulty : 0}>
+                        <option value={0} disabled>הכל</option>
+                        {ListDifficulty?.map((c) =>
+                            <option key={c.Id} value={c.Id}>{c.Difficulty}</option>)}
+                    </select>
+                    {errors.Difficulty?.message}
+                </Form.Field>
+                <Form.Field>
+                    <label>משך זמן ההכנה</label>
+                    <InputRef {...register("Duration")} />
+                    {errors.Duration?.message ? <Message content={errors.Duration.message} /> : <></>}
+                </Form.Field>
+                <Form.Field>
+                    <label> תיאור</label>
+                    <InputRef {...register("Description")} />
+                    {errors.Description?.message ? <Message content={errors.Description.message} /> : <></>}
+                </Form.Field>
+                <Form.Field>
+                    <label>קטגוריה</label>
+                    <select {...register("CategoryId")} name="CategoryId" defaultValue={recipe ? recipe.CategoryId : 0}>
+                        <option value={0} disabled>קטגוריה</option>
+                        {ListCategory?.map((c) =>
+                            <option key={c.Id} value={c.Id}>{c.Name}</option>)}
+                    </select>
+                    {errors.CategoryId?.message}
+                </Form.Field>
+                {/* <Categories/> */}
+                <Form.Field>
+                    <label>תמונה</label>
+                    <InputRef {...register("Img")} />
+                    <p>{errors.Img?.message}</p>
+                </Form.Field>
                 <div>
-                    <label>Products:</label>
-                    {Ingrident?.map((item, index) => {
-                        <div key={index}>
-                            <input placeholder="name" {...register('Ingrident.${index}.Name')} />
-                            <input placeholder="count" {...register('Ingrident.${index}.Count')} />
-                            <input placeholder="type" {...register('Ingrident.${index}.Type')} />
-                        </div>
-                    })}
+                    <label>מוצרים:</label>
+                    {Ingrident?.map((item, index) =>
+                        <FormGroup key={index}>
+                            <Form.Field>
+                                <InputRef placeholder="שם מוצר" {...register(`Ingrident.${index}.Name`)} defaultValue={Ingrident?.Name} />
+
+                            </Form.Field>
+                            <Form.Field>
+                                <InputRef placeholder="כמות" {...register(`Ingrident.${index}.Count`)} defaultValue={Ingrident?.Count} />
+
+                            </Form.Field>
+                            <Form.Field>
+                                <InputRef placeholder="סוג" {...register(`Ingrident.${index}.Type`)} defaultValue={Ingrident?.Type} />
+
+                            </Form.Field>
+                            <Button onClick={()=>removeIngrident(index)}>
+
+                            </Button>
+                        </FormGroup>
+                    )}
                 </div>
                 <button onClick={() => appendIngrident({ Name: "", Count: 0, Type: "" })}>הוספת מוצר</button>
 
                 <div>
-                    <label>Instructions:</label>
-                    {Instructions?.map((item, index) => {
-                        <div ket={index}>
-                            <input placeholder="הכנס פקודות להכנה" {...register('Instructions.${index}.Instructions')} />
-                        </div>
-                    })}
+                    <label>הוראות הכנה:</label>
+                    {Instructions?.map((item, index) => 
+                     <FormGroup key={index}>
+                        <Form.Field>
+                            <InputRef placeholder="הכנס הוראה" {...register(`Instructions.${index}.Name`)} defaultValue={Instructions.Name}/>
+                        </Form.Field>
+                        <Button onClick={()=>removeInstructions(index)}/>
+                     </FormGroup>  
+                    )}
                 </div>
-                <button onClick={() => appendInstructions({Instructions:"" })}>הוספת הוראה</button>
-                <br/>
+                <button onClick={() => appendInstructions({ Instructions: "" })}>הוספת הוראה</button>
+                <br />
                 <input type="submit" />
-            </form>
+            </Form>
         </>
     );
 }
+
+export default AddRecipe;
