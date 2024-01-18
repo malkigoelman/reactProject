@@ -6,11 +6,11 @@ import { useDispatch } from "react-redux";
 import React, { useState } from "react";
 import axios from "axios";
 import * as actions from "../store/action";
-import { Button, Divider, FormInput, Grid, GridColumn, Segment } from "semantic-ui-react";
+import { Button, Divider, Grid, Segment } from "semantic-ui-react";
 //כניסת משתמש
 const schema = yup
     .object({
-        Username: yup.string().required(),
+        UserName: yup.string().required(),
         Password: yup.number().integer().positive().required()
     }).required()
 export const InputRef = React.forwardRef(({ ...rest }, ref) => (
@@ -22,58 +22,56 @@ export const InputRef = React.forwardRef(({ ...rest }, ref) => (
 
 export default function Login() {
 
-    const navigate= useNavigate();
+    const navigate = useNavigate();
     const dispatch = useDispatch();
-    const [users, setUsers] = useState([]);
-    const { register, handleSubmit, formState: { errors }, control } = useForm({
+    const { register, handleSubmit, formState: { errors } } = useForm({
         resolver: yupResolver(schema),
     });
     const onSubmit = (data) => {
-        console.log(data.Name)
-        axios.post('http://localhost:8080/api/user/login', { Username: data.Username, Password: data.Password })
+        console.log("makli")
+        axios.post('http://localhost:8080/api/user/login', { UserName: data.UserName, Password: data.Password })
             .then((responser) => {
-                alert(errors)
                 dispatch({ type: actions.SET_USER, user: responser?.data })
                 navigate("/homepage")
             }).catch((i) => {
                 // console.log(i.responser.data)
                 navigate("/sigin")
-                alert("bgjhgfd")
+                alert("קרתה תקלה")
 
-            })
-    }
+            });
+    };
 
     return (
         <>
-            <Segment onSubmit=(handleSubmit())>
+            <Segment placeholder>
                 <Grid columns={2} relaxed='very' stackable>
-                    <GridColumn>
-                        {/* <Form onSubmit={handleSubmit(onSubmit)}> */}
-                            <FormInput
-                                icon='user'
-                                iconPosition='left'
-                                label='Username'
-                                placeholder='Username'
-                            />
-                            <FormInput
-                                icon='lock'
-                                iconPosition='left'
-                                label='Password'
-                                type='password'
-                            />
+                    <Grid.Column>
+                        <Form onSubmit={handleSubmit(onSubmit)}>
+                            <Form.Field>
+                                <label icon='user' iconPosition='left'>UserName</label>
+                                <InputRef {...register("UserName")} />
+                            </Form.Field>
+                            <Form.Field>
+                                <label icon='lock' iconPosition='left'>Password</label>
+                                <InputRef {...register("Password")} />
+                            </Form.Field>
                             <Button type="submit">Login</Button>
-                        {/* </Form> */}
-                    </GridColumn>
-                    <GridColumn verticalAlign='middle'>
-                        <Button content='Sign up' icon='signup' size='big' onClick={() => navigate('/login')} />
-                    </GridColumn>
+                        </Form>
+                    </Grid.Column>
+                    <Grid.Column verticalAlign='middle'>
+                        <Button content='Sign up' icon='signup' size='big' onClick={() => navigate('/sigin')} />
+                    </Grid.Column>
                 </Grid>
                 <Divider vertical>Or</Divider>
-
             </Segment>
+            {/* {errors?.UserName ? ( */}
+                 {/* <Massage warning header="שם ךא תקין" content={errors?.UserName?.message} />) : (<></> */}
+            {/* )} */}
+            {/* {errors?.Password ? ( */}
+                {/* <Massage warning header="סיסמה ךא תקין" content={errors?.Password?.message} />) : (<></> */}
+            {/* )} */}
 
-            {/* <Link to={"/sigin"}>להרשמה</Link><br /> */}
-            <input type="submit" onClick={() => console.log(errors)} />
+            {/* <input type="submit" onClick={() => console.log(errors)} /> */}
         </>
 
     )

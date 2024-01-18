@@ -4,7 +4,6 @@ import * as yup from "yup";
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { useFrom } from 'react-hook-form';
 import { useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react'
 import { useFieldArray, useForm } from "react-hook-form";
@@ -19,9 +18,8 @@ const AddRecipe = () => {
     const schema = yup.object({
         Name: yup.string().required(),
         CategoryId: yup.number().required("הכנס שם מתכון"),
-        Difficulty: yup.number().positive().integer().required("חובה לבחור רמת קושי"),
+        Difficulty: yup.number().required("חובה לבחור רמת קושי"),
         Duration: yup.number().positive().required("משך זמן במספרים"),
-        Img: yup.string().url(),
         Description: yup.string().required("חובה להכניס תיאור"),
         Instructions: yup.array().of(yup.object().shape({ Instructions: yup.string().required("הכנס הוראות"), })),
         Img: yup.string().url(),
@@ -34,22 +32,24 @@ const AddRecipe = () => {
         ).required(),
     }).required();
     const {
-        register, handleSubmit, formState: { errors }, control
-    } = useForm({
+        register, handleSubmit, formState: { errors }, control,
+    } =useForm  ({
         resolver: yupResolver(schema),
     })
     const { fields: Instructions, append: appendInstructions, remove: removeInstructions } = useFieldArray({
-        control, name: "Instructions"
+        control,
+         name: "Instructions"
     });
     const { fields: Ingrident, append: appendIngrident, remove: removeIngrident } = useFieldArray({
-        control, name: "Ingrident"
+        control, 
+        name: "Ingrident"
     });
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [recipe, setRecipe] = useState(useSelector(state => state.SelectRecipe));
-    const ListCategory = useSelector(state => state.Categories);
-    const ListDifficulty = useSelector(state => state.difficulty);
-    const difficulty = useSelector(state => state.Difficulty);//Nשפט מועתק לא בטוח שנכון וטוב
+    const ListCategory = useSelector(state => state.Category);
+    const ListDifficulty = useSelector(state => state.Difficult);
+    const difficulty = useSelector(state => state.Difficult);//Nשפט מועתק לא בטוח שנכון וטוב
     const user = useSelector(state => state.user);
 
     useEffect(() => {
@@ -57,14 +57,22 @@ const AddRecipe = () => {
         recipe?.Instructions?.map((x) => appendInstructions(x))
     }, [recipe]);
     const onSubmit = (data) => {
-
         console.log(data);
+        console.log(recipe?.Id);
+        let recipeDate = {
+            Id:1,
+            Name: data.Name, UserId: 1, CategoryId: data.CategoryId, Img: data?.Img,
+            Duration: data.Duration, Difficulty: data.Difficulty, Description: data.Description,
+            Ingrident: data.Ingrident, Instructions: data.Instructions
+        }
         if (!recipe) {
-            axios.post("http://localhost:8080/api/recipe", data).then(d => {
+            axios.post("http://localhost:8080/api/recipe", recipeDate).then(d => {
                 dispatch({ type: action.ADD_RECIPE, payload: d.payload })
                 alert("malki");
+                navigate('/allRecipe');
+
             }).catch((e) => {
-                console.error(e);
+                alert(e.response?.data);
             })
         }
         else {
@@ -72,11 +80,12 @@ const AddRecipe = () => {
                 x => {
                     dispatch({ type: action.EDIT_RECIPE, data: x.data })
                     alert("????");
+                    navigate('/allRecipe');
                 }
-            ).catch(x => { console.error(x) })
+            ).catch(x => { alert("jjjj") })
         }
-        navigate('/allRecipe');
     }
+
     return (
         <>
             <Form onSubmit={handleSubmit(onSubmit)}>
@@ -87,10 +96,11 @@ const AddRecipe = () => {
                 </Form.Field>
                 <Form.Field>
                     <label>רמת קושי</label>
-                    <select {...register("Difficulty")} name="Difficulty" defaultValue={recipe ? recipe.Difficulty : 0}>
-                        <option value={0} disabled>הכל</option>
-                        {ListDifficulty?.map((c) =>
-                            <option key={c.Id} value={c.Id}>{c.Difficulty}</option>)}
+                    <select {...register("Difficulty")} name="Difficulty" defaultValue={recipe ? recipe.Difficult : 0}>
+                        <option value="0" disabled>הכל</option>
+                        {/* {console.log("difficult: ",ListDifficulty)} */}
+                        {ListDifficulty?.map((c) => <>
+                            <option key={c.Id} value={c.Id}>{c.Name}</option></>)}
                     </select>
                     {errors.Difficulty?.message}
                 </Form.Field>
@@ -108,12 +118,13 @@ const AddRecipe = () => {
                     <label>קטגוריה</label>
                     <select {...register("CategoryId")} name="CategoryId" defaultValue={recipe ? recipe.CategoryId : 0}>
                         <option value={0} disabled>קטגוריה</option>
+                        {/* {console.log("categories: ", ListCategory)} */}
                         {ListCategory?.map((c) =>
                             <option key={c.Id} value={c.Id}>{c.Name}</option>)}
                     </select>
                     {errors.CategoryId?.message}
                 </Form.Field>
-                {/* <Categories/> */}
+                <Categories />
                 <Form.Field>
                     <label>תמונה</label>
                     <InputRef {...register("Img")} />
@@ -135,7 +146,7 @@ const AddRecipe = () => {
                                 <InputRef placeholder="סוג" {...register(`Ingrident.${index}.Type`)} defaultValue={Ingrident?.Type} />
 
                             </Form.Field>
-                            <Button onClick={()=>removeIngrident(index)}>
+                            <Button onClick={() => removeIngrident(index)}>
 
                             </Button>
                         </FormGroup>
@@ -145,18 +156,18 @@ const AddRecipe = () => {
 
                 <div>
                     <label>הוראות הכנה:</label>
-                    {Instructions?.map((item, index) => 
-                     <FormGroup key={index}>
-                        <Form.Field>
-                            <InputRef placeholder="הכנס הוראה" {...register(`Instructions.${index}.Name`)} defaultValue={Instructions.Name}/>
-                        </Form.Field>
-                        <Button onClick={()=>removeInstructions(index)}/>
-                     </FormGroup>  
+                    {Instructions?.map((item, index) =>
+                        <FormGroup key={index}>
+                            <Form.Field>
+                                <InputRef placeholder="הכנס הוראה" {...register(`Instructions.${index}.Name`)} defaultValue={Instructions.Name} />
+                            </Form.Field>
+                            <Button onClick={() => removeInstructions(index)} />
+                        </FormGroup>
                     )}
                 </div>
                 <button onClick={() => appendInstructions({ Instructions: "" })}>הוספת הוראה</button>
                 <br />
-                <input type="submit" />
+                <InputRef type="submit" onClick={() => console.log("send recipe", errors)} />
             </Form>
         </>
     );

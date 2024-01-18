@@ -9,7 +9,24 @@ import Homepage from './user/homepage';
 import SiginTest from './user/test';
 // import AllRecipe from './recipe/allRecipe';
 import RecipePage from './recipe/recipe1';
+import { useEffect } from 'react';
+import axios from 'axios';
+import { useDispatch } from 'react-redux';
+import * as actions from './store/action';
+import AllRecipe from './recipe/allRecipe';
+import CardRecipe from './recipe/CardRecipe';
+
 function App() {
+
+  const dispatch=useDispatch();
+  useEffect(()=>{
+    axios.get(`http://localhost:8080/api/category`).
+    then(x=>{
+      dispatch({type:actions.SET_CATEGORIES, data:x.data})
+    })
+    .catch(x=>{
+    });
+  },[])
   return (
     <>
       <Routes>
@@ -21,8 +38,9 @@ function App() {
         <Route path="/addRecipe" element={<AddRecipe />} />
         <Route path="/homepage" element={<Homepage />} />
         <Route path="/getCategory" element={<getCategory />} />
-        {/* <Route path="allRecipe/" element={<AllRecipe />} /> */}
-        <Route path="showRwcipe/" element={<RecipePage />} />
+        <Route path="/allRecipe" element={<AllRecipe />} />
+        <Route path="/showRwcipe" element={<RecipePage />} />
+        <Route path="/CardRecipe" element={<CardRecipe />} />
       </Routes>
     </>
   );

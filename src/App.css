@@ -36,3 +36,11 @@
     transform: rotate(360deg);
   }
 }
+
+.recipeImg{
+  height: 50px;
+}
+.recipeImg{
+  overflow: hidden;
+  height: 150px;
+}

@@ -3,10 +3,11 @@ import { useDispatch } from "react-redux";
 import * as yup from "yup";
 import * as actions from "../store/action";
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 
 const Categories = () => {
     const dispatch = useDispatch();
-    // const categories = useSelector(state => state.categories);
+    const categories = useSelector(state => state.Categories);
     const [start, setStart] = useState(false);
 
     const Schema = yup.object().shape({
@@ -26,7 +27,7 @@ const Categories = () => {
     useEffect(() => {
         axios.get('http://localhost:8080/api/category')
             .then(x => {
-                dispatch({ type: actions.SET_CATEGORY, data: x?.data })
+                dispatch({ type: actions.SET_CATEGORIES, data: x?.data })
             })
             .catch(x => {
                 alert(x.responce?.data);

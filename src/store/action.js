@@ -12,9 +12,11 @@ export const DELETE_RECIPE = "DELETE_RECIPE";
 
 export const ADD_CATEGORY = "ADD_CATEGORY";
 export const SET_CATEGORY = "SET_CATEGORY";
+export const SET_CATEGORIES = "SET_CATEGORIES";
 
 export const ADD_PRODUCT="ADD_PRODUCT";
 
+export const DIFFICULT="DIFFICULT";
 export const RELOAD = "RELOAD";
 
 export const GetRecipies = () => {

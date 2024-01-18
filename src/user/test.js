@@ -31,6 +31,7 @@ const SiginTest = () => {
     register,
     handleSubmit,
     formState: { errors },
+    control,
   } = useForm({
     resolver: yupResolver(schema),
   })

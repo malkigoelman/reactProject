@@ -23,6 +23,7 @@ export default function Sigin() {
         register,
         handleSubmit,
         formState: { errors },
+        control
     } = useForm({
         resolver: yupResolver(schema),
     })
