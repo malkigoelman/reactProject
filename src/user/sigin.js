@@ -7,6 +7,7 @@ import React from 'react'
 import 'semantic-ui-css/semantic.min.css'
 import { GridColumn, FormInput, Button, Divider, Form, Grid, Segment, } from 'semantic-ui-react'
 import { InputRef } from "./login";
+import Swal from "sweetalert2";
 //הרשמה חדשה
 //https://react.semantic-ui.com/elements/divider/#types-vertical-form
 const schema = yup
@@ -33,7 +34,11 @@ export default function Sigin() {
         console.log(data)
         axios.post(`http://localhost:8080/api/user/sighin`, { Username: data.Username, Password: data.Password, Name: data.Name, Email: data.Email, Phone: data.Phone, Tz: data.Tz })
             .then((x) => {
-                alert("hi")
+                Swal.fire({
+                    title: "שמחים שהצטרפת אלינו ",
+                    text: "נוספת בהצלחה",
+                    icon: "success"
+                });
                 navigate("/homepage")
             }).catch((i) => {
                 console.log(i.response?.errors)
@@ -42,7 +47,7 @@ export default function Sigin() {
 
     return (
         <>
-            <Segment placeholder>
+            <Segment style={{ margin:80 }} placeholde>
                 <Grid columns={6} relaxed='very' stackable>
                     <Grid.Column>
                         <Form onSubmit={handleSubmit(onSubmit)}>
@@ -70,7 +75,7 @@ export default function Sigin() {
                                 <label icon='user' /*iconPosition='left'*/>Tz</label>
                                 <InputRef {...register("Tz")} />
                             </Form.Field>
-                            <Button type="submit" content="Sign up" primary onClick={()=>console.log(errors)}/>
+                            <Button type="submit" content="Sign up" primary onClick={() => console.log(errors)} />
                         </Form>
                     </Grid.Column>
                     <Grid.Column verticalAlign='middle'>

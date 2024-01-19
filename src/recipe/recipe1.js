@@ -31,6 +31,8 @@ const RecipePage = () => {
     const user = useSelector(state => state.user);
     const navigate = useNavigate();
     const recipe = useSelector(state => state.selectRecipe);
+    console.log(recipe);
+    console.log("malki");
     const ListCategory = useSelector(state => state.Category)
     const ListDifficult = useSelector(state => state.Difficult)
     const dispatch = useDispatch();
@@ -72,7 +74,7 @@ const RecipePage = () => {
                     {user?.Id === recipe?.UserId}
                     <CardContent>
                         <Button onClick={() => {
-                            dispatch({ type: actions.DELETE_RECIPE, data: actions.data.Id })
+                            dispatch({ type: actions.DELETE_RECIPE, data: recipe?.Id })
                             navigate('/allRecipe')
                         }}>
                             <Icon name="trash" />

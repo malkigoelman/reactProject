@@ -31,10 +31,10 @@ export default function Login() {
         let login={UserName:data.UserName,Password:data.Password};
         axios.post(`http://localhost:8080/api/user/login`,login)
             .then((responser) => {
-                dispatch({ type: actions.SET_USER, user: responser?.data })
+                dispatch({ type: actions.SET_USER, user: responser.data })
                 navigate("/homepage")
             }).catch((i) => {
-                alert(i.response?.errors);
+                alert(login);
                 navigate("/sigin")
 
             });
@@ -42,7 +42,7 @@ export default function Login() {
 
     return (
         <>
-            <Segment placeholder>
+            <Segment style={{margin:80}} placeholder>
                 <Grid columns={2} relaxed='very' stackable>
                     <Grid.Column>
                         <Form onSubmit={handleSubmit(onSubmit)}>
@@ -54,7 +54,7 @@ export default function Login() {
                                 <label icon='lock' iconPosition='left'>Password</label>
                                 <InputRef {...register("Password")} />
                             </Form.Field>
-                            <Button type="submit">Login</Button>
+                            <Button type="submit" onClick={()=>console.log(errors)}content="Login"/>
                         </Form>
                     </Grid.Column>
                     <Grid.Column verticalAlign='middle'>
@@ -63,15 +63,7 @@ export default function Login() {
                 </Grid>
                 <Divider vertical>Or</Divider>
             </Segment>
-            {/* {errors?.UserName ? ( */}
-                 {/* <Massage warning header="שם ךא תקין" content={errors?.UserName?.message} />) : (<></> */}
-            {/* )} */}
-            {/* {errors?.Password ? ( */}
-                {/* <Massage warning header="סיסמה ךא תקין" content={errors?.Password?.message} />) : (<></> */}
-            {/* )} */}
-
-            {/* <input type="submit" onClick={() => console.log(errors)} /> */}
-        </>
+       </>
 
     )
 }
