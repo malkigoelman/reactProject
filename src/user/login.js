@@ -1,4 +1,4 @@
-import { Form, useForm } from "react-hook-form";
+import {  useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { Link, useNavigate } from "react-router-dom";
@@ -6,7 +6,7 @@ import { useDispatch } from "react-redux";
 import React, { useState } from "react";
 import axios from "axios";
 import * as actions from "../store/action";
-import { Button, Divider, Grid, Segment } from "semantic-ui-react";
+import { Button, Divider, Grid, Segment ,Form} from "semantic-ui-react";
 //כניסת משתמש
 const schema = yup
     .object({
@@ -24,19 +24,18 @@ export default function Login() {
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const { register, handleSubmit, formState: { errors } } = useForm({
+    const { register, handleSubmit, formState: { errors }} = useForm({
         resolver: yupResolver(schema),
     });
     const onSubmit = (data) => {
-        console.log("makli")
-        axios.post('http://localhost:8080/api/user/login', { UserName: data.UserName, Password: data.Password })
+        let login={UserName:data.UserName,Password:data.Password};
+        axios.post(`http://localhost:8080/api/user/login`,login)
             .then((responser) => {
                 dispatch({ type: actions.SET_USER, user: responser?.data })
                 navigate("/homepage")
             }).catch((i) => {
-                // console.log(i.responser.data)
+                alert(i.response?.errors);
                 navigate("/sigin")
-                alert("קרתה תקלה")
 
             });
     };

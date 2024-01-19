@@ -33,15 +33,15 @@ const AddRecipe = () => {
     }).required();
     const {
         register, handleSubmit, formState: { errors }, control,
-    } =useForm  ({
+    } = useForm({
         resolver: yupResolver(schema),
     })
     const { fields: Instructions, append: appendInstructions, remove: removeInstructions } = useFieldArray({
         control,
-         name: "Instructions"
+        name: "Instructions"
     });
     const { fields: Ingrident, append: appendIngrident, remove: removeIngrident } = useFieldArray({
-        control, 
+        control,
         name: "Ingrident"
     });
     const navigate = useNavigate();
@@ -60,7 +60,7 @@ const AddRecipe = () => {
         console.log(data);
         console.log(recipe?.Id);
         let recipeDate = {
-            Id:1,
+            Id: 1,
             Name: data.Name, UserId: 1, CategoryId: data.CategoryId, Img: data?.Img,
             Duration: data.Duration, Difficulty: data.Difficulty, Description: data.Description,
             Ingrident: data.Ingrident, Instructions: data.Instructions
@@ -72,7 +72,8 @@ const AddRecipe = () => {
                 navigate('/allRecipe');
 
             }).catch((e) => {
-                alert(e.response?.data);
+                alert(e.response?.data+" "+recipeDate);
+
             })
         }
         else {
@@ -98,7 +99,6 @@ const AddRecipe = () => {
                     <label>רמת קושי</label>
                     <select {...register("Difficulty")} name="Difficulty" defaultValue={recipe ? recipe.Difficult : 0}>
                         <option value="0" disabled>הכל</option>
-                        {/* {console.log("difficult: ",ListDifficulty)} */}
                         {ListDifficulty?.map((c) => <>
                             <option key={c.Id} value={c.Id}>{c.Name}</option></>)}
                     </select>
@@ -118,17 +118,15 @@ const AddRecipe = () => {
                     <label>קטגוריה</label>
                     <select {...register("CategoryId")} name="CategoryId" defaultValue={recipe ? recipe.CategoryId : 0}>
                         <option value={0} disabled>קטגוריה</option>
-                        {/* {console.log("categories: ", ListCategory)} */}
                         {ListCategory?.map((c) =>
                             <option key={c.Id} value={c.Id}>{c.Name}</option>)}
                     </select>
                     {errors.CategoryId?.message}
                 </Form.Field>
-                <Categories />
                 <Form.Field>
-                    <label>תמונה</label>
-                    <InputRef {...register("Img")} />
-                    <p>{errors.Img?.message}</p>
+                <label>תמונה</label>
+                <InputRef {...register("Img")} />
+                <p>{errors.Img?.message}</p>
                 </Form.Field>
                 <div>
                     <label>מוצרים:</label>

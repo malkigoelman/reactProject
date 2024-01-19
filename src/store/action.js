@@ -21,11 +21,11 @@ export const RELOAD = "RELOAD";
 
 export const GetRecipies = () => {
 
-    return dispatch => {
-        dispatch({ type: "RELOAD" });
+    // return dispatch => {
+    //     dispatch({ type: "RELOAD" });
 
-        axios.get("https://jsonplaceholder.typicode.com/recipes").then(
-            x => setTimeout(() => dispatch({ type: "SET_USER", data: x.data[0] }), 200)
-        )
-    }
+    //     axios.get("https://jsonplaceholder.typicode.com/recipes").then(
+    //         x => setTimeout(() => dispatch({ type: "SET_USER", data: x.data[0] }), 200)
+    //     )
+    // }
 }

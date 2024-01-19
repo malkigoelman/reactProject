@@ -4,9 +4,9 @@ const Search = {
     Category: [],
     recipies:[],
     User: null,
-    Difficult: ["קל","בינוני","קשה","קשה מאד"],
-    selestRecipe: null,
-    ListShopping: [],
+    Difficult:[],
+    selectRecipe: null,
+    ListShopping: []
 }
 export default function reducer(state = Search, action) {
     switch (action.type) {
@@ -33,11 +33,9 @@ export default function reducer(state = Search, action) {
                 recipies
             }
         }
-        case actionName.SET_RECIPES: {
-            return {
-                ...state,
-               recipies: action.data
-            }
+        case actionName.SET_RECIPES: 
+        {
+            return {...state,recipies: action.data};
         }
         case actionName.DELETE_RECIPE: {
             let recipies = [...state.recipies];
@@ -70,10 +68,7 @@ export default function reducer(state = Search, action) {
         }
         case actionName.SET_RECIPE_USER:
             {
-                return{
-                    ...state,
-                    selestRecipe:action.data
-                }
+                return{...state,selectRecipe:action.data}
             }
         default: return { ...state,Difficult:[{Id:1,Name:'קל'},{Id:2,Name:'בינוני'},{Id:3,Name:'קשה '},{Id:4,Name:'קשה מאד'}] };
     }

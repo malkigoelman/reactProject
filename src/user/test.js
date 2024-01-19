@@ -11,8 +11,6 @@ import { useDispatch } from 'react-redux'
 import * as actions from "../store/action";
 
 
-// const navig = useNavigate();
-
 const SiginTest = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -31,21 +29,20 @@ const SiginTest = () => {
     register,
     handleSubmit,
     formState: { errors },
-    control,
   } = useForm({
     resolver: yupResolver(schema),
   })
   const onSubmit = (data) => {
-    console.log(data.Name)
     axios.post('http://localhost:8080/api/user/sighin', { Username: data.Username, Password: data.Password, Name: data.Name, Email: data.Email, Phone: data.Phone, Tz: data.Tz })
       .then((responser) => {
+        alert("hi");
         dispatch({ type: actions.SET_USER, user: responser?.data });
-        Swal.fire({
-          title: "Good ",
-          text: "נוספת בהצלחה",
-          icon: "success"
-        });
-        navigate("../homepage")
+        // Swal.fire({
+        //   title: "Good ",
+        //   text: "נוספת בהצלחה",
+        //   icon: "success"
+        // });
+        navigate("/homepage")
       }).catch((i) => {
         alert("oops")
       })
@@ -53,7 +50,7 @@ const SiginTest = () => {
   return (
     <>
       <Segment>
-        <Grid columns={2} relaxed='very' stackable>
+        <Grid columns={6} relaxed='very' stackable>
           <GridColumn>
             <Form onSubmit={handleSubmit(onSubmit)}>
               <FormInput
@@ -94,11 +91,11 @@ const SiginTest = () => {
               />
 
 
-              <Button type="submit">Login</Button>
+              <Button type="submit" content="Sigin up" primary/>
             </Form>
           </GridColumn>
           <GridColumn verticalAlign='middle'>
-            <Button content='Sign up' icon='signup' size='big' onClick={() => navigate('/sigin')} />
+            {/* <Button content='Login' icon='signup' size='big' onClick={() => navigate('/sigin')} /> */}
           </GridColumn>
         </Grid>
 

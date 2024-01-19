@@ -6,7 +6,7 @@ import Login from './user/login';
 import Sigin from './user/sigin';
 import AddRecipe from './recipe/addRecipe';
 import Homepage from './user/homepage';
-import SiginTest from './user/test';
+// import SiginTest from './user/test';
 // import AllRecipe from './recipe/allRecipe';
 import RecipePage from './recipe/recipe1';
 import { useEffect } from 'react';
@@ -33,13 +33,14 @@ function App() {
         <Route path="/" element={<Home />}/>
         {/* <Route path="/" element={<SiginTest />}/> */}
         <Route path="/home" element={<Home />} />
+        
         <Route path="/login" element={<Login />} />
-        <Route path="/sigin" element={<SiginTest />} />
+        <Route path="/sigin" element={<Sigin />} />
         <Route path="/addRecipe" element={<AddRecipe />} />
         <Route path="/homepage" element={<Homepage />} />
         <Route path="/getCategory" element={<getCategory />} />
         <Route path="/allRecipe" element={<AllRecipe />} />
-        <Route path="/showRwcipe" element={<RecipePage />} />
+        <Route path="/recipe1" element={<RecipePage />} />
         <Route path="/CardRecipe" element={<CardRecipe />} />
       </Routes>
     </>

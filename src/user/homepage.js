@@ -1,15 +1,24 @@
 import { Link } from "react-router-dom"
+import { Header, HeaderContent, Icon } from "semantic-ui-react";
 
-const Homepage=()=>{
-    return(
+const Homepage = () => {
+    return (
         <>
-        <Link to="/home">דף הבית</Link><br/>
-        <Link to="/allRecipe">המתכונים שלי</Link><br/>
-        <Link to="/allRecipe">מתכונים</Link><br/>
-        <Link to="/addRecipe">הוספת מתכון</Link><br/>
-        <Link to="/Addcategory">הוספת קטגוריה</Link><br/>
-        <Link to="/recipe1">נסיון הגלגול</Link><br/>
-        <Link to="/">החלף משתמש</Link><br/>
+            <div>
+                <Header as='h4' textAlign="right">
+                    <HeaderContent> <Link to="/">החלף משתמש</Link></HeaderContent>
+                    <HeaderContent>|</HeaderContent>
+                    <HeaderContent><Link to="/recipe1">נסיון הגלגול</Link></HeaderContent>
+                    <HeaderContent>|</HeaderContent>
+                    <HeaderContent><Link to="/addRecipe">הוספת מתכון</Link></HeaderContent>     
+                    <HeaderContent>|</HeaderContent>
+                    <HeaderContent><Link to="/allRecipe">המתכונים שלי</Link></HeaderContent>
+                    <HeaderContent>|</HeaderContent>
+                    <HeaderContent> <Link to="/allRecipe">מתכונים</Link></HeaderContent>
+                </Header>
+            </div>
+
+           
         </>
     )
 }

@@ -11,34 +11,34 @@ const CardRecipe = ({ recipe }) => {
     const ListCategory = useSelector(state => state.Category);
     const ListDifficulty = useSelector(state => state.Difficult);
 
-    console.log(recipe);
+    // console.log(recipe);
     return <>
         <Card>
-            <Image wrapped src={recipe.Img} />
+            <Image wrapped src={recipe?.Img} />
             <CardContent>
-                <CardHeader>{recipe.Name}{user?.id == recipe.UserId ? <Icon name="pencil alternate" floated="left" /> : <></>} </CardHeader>
-                {/* <CardDescription>{recipe.description}</CardDescription> */}
+                <CardHeader>{recipe.Name}{user?.id == recipe?.UserId ? <Icon name="pencil alternate" floated="left" /> : <></>} </CardHeader>
+                <CardDescription>{recipe?.Description}</CardDescription>
             </CardContent>
             <CardContent extra>
                 <span>
-                    <Icon name="hand point left" floated="left" />
-                    {ListCategory?.find(x => x.Id === recipe.CategoryId)?.Name}
+                    <Icon name="unordered list"/>
+                    {ListCategory.find(x => x.Id === recipe.CategoryId)?.Name}
                 </span>
                 <span>
-                    <Icon name="signal" floated="left" />
-                    {ListDifficulty?.find(x => x.Id === recipe.Difficult)?.Name}
+                    <Icon name="signal" />
+                    {ListDifficulty.find(x => x.Id === recipe.Difficult)?.Name}
                 </span>
                 <span>
-                    <Icon name="clock" floated="left" />
-                    {recipe.Duration + " דקות"}
+                    <Icon name="clock" />
+                    {recipe?.Duration + " דקות"}
                 </span>
-                {/* <Button animated onClick={() => {
+                <Button animated onClick={() => {
                     dispatch({ type: actions.SET_RECIPE_USER, data: recipe })
-                    navigate(`/addRecipe`);
+                    navigate('/recipe1');
                 }}>
-                    <ButtonContent visible>הצג</ButtonContent>
+                    <ButtonContent visible>להצגת המתכון</ButtonContent>
                     <ButtonContent hidden><Icon name='arrow left' /></ButtonContent>
-                </Button> */}
+                </Button>
             </CardContent>
         </Card>
     </>
