@@ -10,7 +10,7 @@ import { Button, Divider, Grid, Segment ,Form} from "semantic-ui-react";
 //כניסת משתמש
 const schema = yup
     .object({
-        UserName: yup.string().required(),
+        Username: yup.string().required(),
         Password: yup.number().integer().positive().required()
     }).required()
 export const InputRef = React.forwardRef(({ ...rest }, ref) => (
@@ -28,15 +28,15 @@ export default function Login() {
         resolver: yupResolver(schema),
     });
     const onSubmit = (data) => {
-        let login={UserName:data.UserName,Password:data.Password};
+        let login={Username:data.Username,Password:data.Password};
         axios.post(`http://localhost:8080/api/user/login`,login)
             .then((responser) => {
+                console.log(login)
                 dispatch({ type: actions.SET_USER, user: responser.data })
                 navigate("/homepage")
             }).catch((i) => {
                 alert(login);
                 navigate("/sigin")
-
             });
     };
 
@@ -48,7 +48,7 @@ export default function Login() {
                         <Form onSubmit={handleSubmit(onSubmit)}>
                             <Form.Field>
                                 <label icon='user' iconPosition='left'>UserName</label>
-                                <InputRef {...register("UserName")} />
+                                <InputRef {...register("Username")} />
                             </Form.Field>
                             <Form.Field>
                                 <label icon='lock' iconPosition='left'>Password</label>

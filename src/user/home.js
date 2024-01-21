@@ -8,15 +8,10 @@ const Home = () => {
     <>
         <Header as='h2' icon textAlign='center'>
             <Icon name='hand point down outline' circular />
-            {/* <p>😀</p> */}
             <HeaderContent><Link to="/login" >כניסה</Link></HeaderContent>
             <HeaderContent><Link to="/sigin" >הרשמה</Link></HeaderContent>
         </Header>
-        <Image
-            centered
-            size='large'
-            src='/images/wireframe/centered-paragraph.png'
-        />
+      <Image src="../img/homeimg.jpg"></Image>
     </>
     )
 

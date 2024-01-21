@@ -15,6 +15,7 @@ export const SET_CATEGORY = "SET_CATEGORY";
 export const SET_CATEGORIES = "SET_CATEGORIES";
 
 export const ADD_PRODUCT="ADD_PRODUCT";
+export const APDATE_PRODUCT="APDATE_PRODUCT";
 
 export const DIFFICULT="DIFFICULT";
 export const RELOAD = "RELOAD";

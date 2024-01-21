@@ -4,7 +4,7 @@ const Search = {
     Category: [],
     recipies:[],
     User: null,
-    Difficult:[],
+    Difficulty:[],
     selectRecipe: null,
     ListShopping: []
 }
@@ -17,6 +17,16 @@ export default function reducer(state = Search, action) {
                 ...state,
                 categories
             }
+        }
+        case actionName.APDATE_PRODUCT:{
+            let x=[...state.ListShopping];
+            x[action.index]=action.data;
+            return {...state,x}
+        }
+        case actionName.ADD_PRODUCT:{
+            let x=[...state.ListShopping]
+            x.push(action.data)
+            return{...state,x}
         }
         case actionName.SET_CATEGORIES: {
             const categories = action.data;
@@ -70,7 +80,7 @@ export default function reducer(state = Search, action) {
             {
                 return{...state,selectRecipe:action.data}
             }
-        default: return { ...state,Difficult:[{Id:1,Name:'קל'},{Id:2,Name:'בינוני'},{Id:3,Name:'קשה '},{Id:4,Name:'קשה מאד'}] };
+        default: return { ...state,Difficulty:[{Id:1,Name:'קל'},{Id:2,Name:'בינוני'},{Id:3,Name:'קשה '},{Id:4,Name:'קשה מאד'}] };
     }
 
 }

@@ -16,7 +16,7 @@ const AllRecipe = () => {
     const [duration, setDuration] = useState(null);
     const [difficult, setDifficult] = useState(null);
     const ListCategory = useSelector(state => state.Category);//כאן יש שגיאה
-    const ListDifficulty = useSelector(state => state.Difficult);
+    const ListDifficulty = useSelector(state => state.Difficulty);
     useEffect(() => {
         dispatch({ type: actions.SET_RECIPE_USER, data: null });
         axios.get(`http://localhost:8080/api/recipe`)
@@ -29,7 +29,7 @@ const AllRecipe = () => {
     }, [])
     return (
         <>
-            <Segment>
+            <Segment >
                 <Select placeholder="קטגוריה" onChange={(x, { value }) => {
                     setCategory(value);
                 }} options={
@@ -62,13 +62,13 @@ const AllRecipe = () => {
                 }}
                 >איפוס</Button>
             </Segment>
-            <div className="container">
+            <div className="container" placeholder>
                 {/* <CardGroup> */}
                 {recipies?.map((x) => (
                     (!category || parseInt(category) === x.CategoryId) &&
                         (!userId || (userId && userId.Id === x.UserId)) &&
                         (!duration || parseInt(duration) >= parseInt(x.Duration)) &&
-                        (!difficult || x.Difficult === difficult) ?
+                        (!difficult || x.Difficulty === difficult) ?
                         <CardRecipe key={x.Id} recipe={x} /> : null))
                 }
                 {/* </CardGroup> */}

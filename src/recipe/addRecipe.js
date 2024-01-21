@@ -10,8 +10,9 @@ import { useFieldArray, useForm } from "react-hook-form";
 import * as action from "../store/action";
 import * as reducer from "../store/reducer";
 import Categories from "../category/getCategory";
-import { Input, Message, Form, ListDescription, FormGroup, Button } from "semantic-ui-react";
+import { Input, Message, Form, ListDescription, FormGroup, Button, Icon } from "semantic-ui-react";
 import { InputRef } from "../user/login";
+import Swal from "sweetalert2";
 
 const AddRecipe = () => {
 
@@ -46,59 +47,64 @@ const AddRecipe = () => {
     });
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const user = useSelector(state => state.user);
     const [recipe, setRecipe] = useState(useSelector(state => state.SelectRecipe));
     const ListCategory = useSelector(state => state.Category);
-    const ListDifficulty = useSelector(state => state.Difficult);
-    const difficulty = useSelector(state => state.Difficult);//Nשפט מועתק לא בטוח שנכון וטוב
-    const user = useSelector(state => state.user);
-
+    const ListDifficulty = useSelector(state => state.Difficulty);
     useEffect(() => {
         recipe?.Ingrident?.map((x) => appendIngrident(x))
         recipe?.Instructions?.map((x) => appendInstructions(x))
     }, [recipe]);
     const onSubmit = (data) => {
-        console.log(data);
-        console.log(recipe?.Id);
+        alert(recipe?.Id);
         let recipeDate = {
-            Id: 1,
-            Name: data.Name, UserId: 1, CategoryId: data.CategoryId, Img: data?.Img,
+            Id: recipe?.Id,
+            Name: data.Name, UserId: user.Id, CategoryId: data.CategoryId, Img: data?.Img,
             Duration: data.Duration, Difficulty: data.Difficulty, Description: data.Description,
             Ingrident: data.Ingrident, Instructions: data.Instructions
         }
+        let recipeEdit;
+        alert("0");
         if (!recipe) {
-            axios.post("http://localhost:8080/api/recipe", recipeDate).then(d => {
-                dispatch({ type: action.ADD_RECIPE, payload: d.payload })
-                alert("malki");
-                navigate('/allRecipe');
+            alert("1");
+            axios.post("http://localhost:8080/api/recipe", recipeDate)
+                .then(d => {
+                    recipeEdit = d.data;;
+                    dispatch({ type: action.ADD_RECIPE, payload: recipeEdit })
+                    alert("2");
 
-            }).catch((e) => {
-                alert(e.response?.data+" "+recipeDate);
+                }).catch((e) => {
+                    alert(e.response?.data + " " + recipeDate);
+                    alert("3");
 
-            })
+                })
         }
         else {
-            axios.post('http://localhost:8080/api/recipe/edit', { ...data, UserId: recipe.userId, Id: recipe.Id }).then(
-                x => {
-                    dispatch({ type: action.EDIT_RECIPE, data: x.data })
-                    alert("????");
-                    navigate('/allRecipe');
-                }
-            ).catch(x => { alert("jjjj") })
+            axios.post('http://localhost:8080/api/recipe/edit', recipeDate).
+                then(x => {
+                    recipeEdit = x
+                    alert("4");
+                })
+                .catch(x => {
+                    alert(x.response?.date)
+                    alert("5");
+                })
         }
+        navigate('/allRecipe');
     }
 
     return (
-        <>
-            <Form onSubmit={handleSubmit(onSubmit)}>
+        <>{user === null ? navigate('/') : console.log(user)}
+            <Form onSubmit={handleSubmit(onSubmit)} >
                 <Form.Field>
                     <label>שם המתכון</label>
-                    <InputRef {...register("Name")} />
+                    <InputRef {...register("Name")} defaultValue={recipe?.Name} />
                     {errors.Name?.message ? <Message content={errors.Name.message} /> : <></>}
                 </Form.Field>
                 <Form.Field>
                     <label>רמת קושי</label>
-                    <select {...register("Difficulty")} name="Difficulty" defaultValue={recipe ? recipe.Difficult : 0}>
-                        <option value="0" disabled>הכל</option>
+                    <select {...register("Difficulty")} name="Difficulty" defaultValue={recipe ? recipe.Difficulty : 0}>
+                        <option value="0" disabled></option>
                         {ListDifficulty?.map((c) => <>
                             <option key={c.Id} value={c.Id}>{c.Name}</option></>)}
                     </select>
@@ -106,12 +112,12 @@ const AddRecipe = () => {
                 </Form.Field>
                 <Form.Field>
                     <label>משך זמן ההכנה</label>
-                    <InputRef {...register("Duration")} />
+                    <InputRef {...register("Duration")} defaultValue={recipe?.Duration} />
                     {errors.Duration?.message ? <Message content={errors.Duration.message} /> : <></>}
                 </Form.Field>
                 <Form.Field>
                     <label> תיאור</label>
-                    <InputRef {...register("Description")} />
+                    <InputRef {...register("Description")} defaultValue={recipe?.Description} />
                     {errors.Description?.message ? <Message content={errors.Description.message} /> : <></>}
                 </Form.Field>
                 <Form.Field>
@@ -123,10 +129,11 @@ const AddRecipe = () => {
                     </select>
                     {errors.CategoryId?.message}
                 </Form.Field>
+                {/* <Categories /> */}
                 <Form.Field>
-                <label>תמונה</label>
-                <InputRef {...register("Img")} />
-                <p>{errors.Img?.message}</p>
+                    <label>תמונה</label>
+                    <InputRef {...register("Img")} defaultValue={recipe?.Img} />
+                    {errors.Img?.message}
                 </Form.Field>
                 <div>
                     <label>מוצרים:</label>
@@ -134,18 +141,16 @@ const AddRecipe = () => {
                         <FormGroup key={index}>
                             <Form.Field>
                                 <InputRef placeholder="שם מוצר" {...register(`Ingrident.${index}.Name`)} defaultValue={Ingrident?.Name} />
-
+                                {/* console.log(item) */}
                             </Form.Field>
                             <Form.Field>
-                                <InputRef placeholder="כמות" {...register(`Ingrident.${index}.Count`)} defaultValue={Ingrident?.Count} />
-
+                                <InputRef placeholder="כמות" {...register(`Ingrident.${index}.Count`)} />
                             </Form.Field>
                             <Form.Field>
                                 <InputRef placeholder="סוג" {...register(`Ingrident.${index}.Type`)} defaultValue={Ingrident?.Type} />
-
                             </Form.Field>
                             <Button onClick={() => removeIngrident(index)}>
-
+                                <Icon name="trash alternate" />
                             </Button>
                         </FormGroup>
                     )}
@@ -159,13 +164,15 @@ const AddRecipe = () => {
                             <Form.Field>
                                 <InputRef placeholder="הכנס הוראה" {...register(`Instructions.${index}.Name`)} defaultValue={Instructions.Name} />
                             </Form.Field>
-                            <Button onClick={() => removeInstructions(index)} />
+                            <Button onClick={() => removeInstructions(index)}>
+                                <Icon name="trash alternate" />
+                            </Button>
                         </FormGroup>
                     )}
                 </div>
                 <button onClick={() => appendInstructions({ Instructions: "" })}>הוספת הוראה</button>
                 <br />
-                <InputRef type="submit" onClick={() => console.log("send recipe", errors)} />
+                <button type='submit' onClick={() => console.log("send recipe"+recipe )}>שמירת מתכון</button>
             </Form>
         </>
     );

@@ -9,14 +9,13 @@ const CardRecipe = ({ recipe }) => {
     const navigate = useNavigate();
     const user = useSelector(state => state.user);
     const ListCategory = useSelector(state => state.Category);
-    const ListDifficulty = useSelector(state => state.Difficult);
+    const ListDifficulty = useSelector(state => state.Difficulty);
 
-    // console.log(recipe);
     return <>
         <Card>
             <Image wrapped src={recipe?.Img} />
             <CardContent>
-                <CardHeader>{recipe.Name}{user?.id == recipe?.UserId ? <Icon name="pencil alternate" floated="left" /> : <></>} </CardHeader>
+                <CardHeader >{recipe.Name}{user?.id == recipe?.UserId ? <Icon name="pencil alternate" floated="left" /> : <></>} </CardHeader>
                 <CardDescription>{recipe?.Description}</CardDescription>
             </CardContent>
             <CardContent extra>
@@ -26,7 +25,7 @@ const CardRecipe = ({ recipe }) => {
                 </span>
                 <span>
                     <Icon name="signal" />
-                    {ListDifficulty.find(x => x.Id === recipe.Difficult)?.Name}
+                    {ListDifficulty.find(x => x.Id === recipe.Difficulty)?.Name}
                 </span>
                 <span>
                     <Icon name="clock" />
@@ -34,6 +33,7 @@ const CardRecipe = ({ recipe }) => {
                 </span>
                 <Button animated onClick={() => {
                     dispatch({ type: actions.SET_RECIPE_USER, data: recipe })
+                    console.log(recipe)
                     navigate('/recipe1');
                 }}>
                     <ButtonContent visible>להצגת המתכון</ButtonContent>
