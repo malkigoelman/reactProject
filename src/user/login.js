@@ -31,9 +31,9 @@ export default function Login() {
         let login={Username:data.Username,Password:data.Password};
         axios.post(`http://localhost:8080/api/user/login`,login)
             .then((responser) => {
-                console.log(login)
+                console.log(login.Username)
                 dispatch({ type: actions.SET_USER, user: responser.data })
-                navigate("/homepage")
+                navigate("/home")
             }).catch((i) => {
                 alert(login);
                 navigate("/sigin")
