@@ -3,7 +3,7 @@ import * as actionName from './action';
 const Search = {
     Category: [],
     recipies: [],
-    User: null,
+    user: null,
     Difficulty: [],
     selectRecipe: null,
     ListShopping: []
@@ -19,14 +19,13 @@ export default function reducer(state = Search, action) {
                 return { ...state, recipies: action.data };
             }
         case actionName.ADD_PRODUCT: {
-            let x = [...state.ListShopping]
+            let x = [state.ListShopping]
             x.push(action.data)
-            return { ...state, x }
+            return { ...state, ListShopping:x}
         }
         case actionName.UPDATE_PRODUCT: {
             let x = state.ListShopping;
             x[action.index] = action.data;
-            x.filter(x => x)
             return { ...state, ListShopping: x }
         }
         case actionName.SET_PRODUCT:{
@@ -67,7 +66,7 @@ export default function reducer(state = Search, action) {
         case actionName.SET_USER: {
             return {
                 ...state,
-                User: action.data
+                user: action.data
             }
         }
         case actionName.SET_RECIPE_USER:

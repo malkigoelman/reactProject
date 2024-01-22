@@ -8,7 +8,7 @@ const Header = () => {
   const [activeItem, setActiv] = useState("");
   const navigate = useNavigate();
   const dispatch=useDispatch();
-  const user = useSelector(state => state.User);
+  const user = useSelector(state => state.user);
   return <>
     {user ? <><Menu >
       <MenuMenu position='right'>

@@ -3,11 +3,11 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import * as actions from "../store/action";
 import { Button, Divider, Grid, Segment, Form } from "semantic-ui-react";
-
+import { getProducts } from "../service/serviceShopping";
 //כניסת משתמש
 const schema = yup
   .object({
@@ -28,6 +28,7 @@ export default function Login() {
   const { register, handleSubmit, formState: { errors } } = useForm({
     resolver: yupResolver(schema),
   });
+  const user = useSelector(state => state.user);
   const onSubmit = (data) => {
     let login = { Username: data.Username, Password: data.Password };
     axios.post(`http://localhost:8080/api/user/login`, login)
@@ -39,6 +40,10 @@ export default function Login() {
         navigate("/sigin")
       });
   };
+  useEffect(() => {
+    if (user)
+      dispatch(getProducts(user.data.Id));
+  }, [user]);
   return (
     <>
       <Segment style={{ margin: 80 }} placeholder>
@@ -46,11 +51,11 @@ export default function Login() {
           <Grid.Column>
             <Form onSubmit={handleSubmit(onSubmit)}>
               <Form.Field>
-                <label icon='user' iconPosition='left'>UserName</label>
+                <label icon='user' iconposition='left'>UserName</label>
                 <InputRef {...register("Username")} />
               </Form.Field>
               <Form.Field>
-                <label icon='lock' iconPosition='left'>Password</label>
+                <label icon='lock' iconposition='left'>Password</label>
                 <InputRef {...register("Password")} />
               </Form.Field>
               <Button type="submit" onClick={() => console.log(errors)} content="Login" />

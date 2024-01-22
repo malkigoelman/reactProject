@@ -19,14 +19,14 @@ const Shopping = () => {
     }).required();
     const { register, handleSubmit, formState: { errors }, } = useForm({ resolver: yupResolver(Schema) });
     const list = useSelector(state => state.ListShopping);
-    const user = useSelector(state => state.User);
+    const user = useSelector(state => state.user);
     const [open, setOpen] = useState(false);
     const Delete = (deleteItem) => {
         dispatch(pro.deleteProduct(deleteItem.Id));
     }
     const Update = (x, y) => {
         pro.addProduct({...x,Count:y}).then(res=>{
-            dispatch({type:action.UPDATE_PRODUCT,data:res.data,index:localStorage.findIndex(a=>a.Name===x.Name)})
+            dispatch({type:action.UPDATE_PRODUCT,data:res.data,index:list.findIndex(a=>a.Name===x.Name)})
             Swal.fire({
                 position: "top-end",
                 icon: "success",
@@ -70,8 +70,7 @@ const Shopping = () => {
                             <TableCell>{x.Name}</TableCell>
                             <TableCell>{x.Count}</TableCell>
                             <TableCell>
-                                <Button onClick={() => {
-
+                                <Button icon onClick={() => {
                                     Swal.fire({
                                         title: "אתה בטוח?",
                                         icon: "warning",

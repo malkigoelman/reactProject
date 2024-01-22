@@ -11,28 +11,30 @@ import AddRecipe from './recipe/addRecipe';
 import RecipePage from './recipe/recipe1';
 import { useEffect } from 'react';
 import axios from 'axios';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import * as actions from './store/action';
 import AllRecipe from './recipe/allRecipe';
 import CardRecipe from './recipe/CardRecipe';
 import Shopping from './shopping/shopping';
+import { getProducts } from './service/serviceShopping';
 function App() {
 
-  const dispatch=useDispatch();
-  useEffect(()=>{
+  const dispatch = useDispatch();
+  useEffect(() => {
     axios.get(`http://localhost:8080/api/category`).
-    then(x=>{
-      dispatch({type:actions.SET_CATEGORIES, data:x.data})
-    })
-    .catch(x=>{
-    });
-  },[])
+      then(x => {
+        dispatch({ type: actions.SET_CATEGORIES, data: x.data })
+      })
+      .catch(x => {
+      });
+  }, [])
+
   return (
     <>
       <Routes>
-        <Route path="/" element={<Home />}/>
+        <Route path="/" element={<Home />} />
         <Route path="/home" element={<Home />} />
-        <Route path='shopping' element={<Shopping/>}/>
+        <Route path='shopping' element={<Shopping />} />
         <Route path="/login" element={<Login />} />
         <Route path="/sigin" element={<Sigin />} />
         <Route path="/addRecipe" element={<AddRecipe />} />

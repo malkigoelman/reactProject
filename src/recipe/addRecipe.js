@@ -47,7 +47,7 @@ const AddRecipe = () => {
     });
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const user = useSelector(state => state.User);
+    const user = useSelector(state => state.user);
     const [recipe, setRecipe] = useState(useSelector(state => state.selectRecipe));
     const ListCategory = useSelector(state => state.Category);
     const ListDifficulty = useSelector(state => state.Difficulty);
