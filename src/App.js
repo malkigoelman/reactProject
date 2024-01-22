@@ -15,7 +15,7 @@ import { useDispatch } from 'react-redux';
 import * as actions from './store/action';
 import AllRecipe from './recipe/allRecipe';
 import CardRecipe from './recipe/CardRecipe';
-
+import Shopping from './shopping/shopping';
 function App() {
 
   const dispatch=useDispatch();
@@ -31,13 +31,11 @@ function App() {
     <>
       <Routes>
         <Route path="/" element={<Home />}/>
-        {/* <Route path="/" element={<SiginTest />}/> */}
         <Route path="/home" element={<Home />} />
-        
+        <Route path='shopping' element={<Shopping/>}/>
         <Route path="/login" element={<Login />} />
         <Route path="/sigin" element={<Sigin />} />
         <Route path="/addRecipe" element={<AddRecipe />} />
-        {/* <Route path="/homepage" element={<Homepage />} /> */}
         <Route path="/getCategory" element={<getCategory />} />
         <Route path="/allRecipe" element={<AllRecipe />} />
         <Route path="/recipe1" element={<RecipePage />} />

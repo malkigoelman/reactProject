@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import * as actions from '../store/action';
-import { Button, CardGroup, Input, Segment, Select } from "semantic-ui-react";
+import { Button, CardGroup, Checkbox, Input, Segment, Select } from "semantic-ui-react";
 import CardRecipe from "./CardRecipe";
 
 
@@ -14,6 +14,7 @@ const AllRecipe = () => {
     const [userId, setUserId] = useState(null);
     const [category, setCategory] = useState(null);
     const [duration, setDuration] = useState(null);
+    const [current,setCurrent]=useState(false);
     const [difficult, setDifficult] = useState(null);
     const ListCategory = useSelector(state => state.Category);//כאן יש שגיאה
     const ListDifficulty = useSelector(state => state.Difficulty);
@@ -24,7 +25,7 @@ const AllRecipe = () => {
                 dispatch({ type: actions.SET_RECIPES, data: x.data })
             })
             .catch(x => {
-                alert(x.response?.data);
+                // alert(x.response?.data);
             });
     }, [])
     return (
@@ -53,16 +54,19 @@ const AllRecipe = () => {
                     type="number"
                     onChange={(x, { value }) => setUserId(value)}
                 />
+                    <Checkbox onChange={()=>setUserId(!current)} label="הצגת המתכונים שלי"/>
                 <Button
                 placeholder="איפוס סינון"
-                onChange={()=>{
-                    alert("sdfghj")
+                onClick={()=>{
                     setCategory(null);
-                    
+                    setUserId(false);
+                    setDifficult(null);
+                    setDuration(null);
+                    console.log("dfghj");
                 }}
                 >איפוס</Button>
             </Segment>
-            <div className="container" placeholder>
+            <div className="container" >
                 {/* <CardGroup> */}
                 {recipies?.map((x) => (
                     (!category || parseInt(category) === x.CategoryId) &&

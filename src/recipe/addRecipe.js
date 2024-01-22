@@ -22,7 +22,7 @@ const AddRecipe = () => {
         Difficulty: yup.number().required("חובה לבחור רמת קושי"),
         Duration: yup.number().positive().required("משך זמן במספרים"),
         Description: yup.string().required("חובה להכניס תיאור"),
-        Instructions: yup.array().of(yup.object().shape({ Instructions: yup.string().required("הכנס הוראות"), })),
+        Instructions: yup.array().of(yup.string().required("הכנס הוראות")),
         Img: yup.string().url(),
         Ingrident: yup.array().of(yup.object
             ({
@@ -47,54 +47,49 @@ const AddRecipe = () => {
     });
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const user = useSelector(state => state.user);
-    const [recipe, setRecipe] = useState(useSelector(state => state.SelectRecipe));
+    const user = useSelector(state => state.User);
+    const [recipe, setRecipe] = useState(useSelector(state => state.selectRecipe));
     const ListCategory = useSelector(state => state.Category);
     const ListDifficulty = useSelector(state => state.Difficulty);
+    console.log("user:",user);
     useEffect(() => {
         recipe?.Ingrident?.map((x) => appendIngrident(x))
         recipe?.Instructions?.map((x) => appendInstructions(x))
     }, [recipe]);
+    let recipeEdit;
     const onSubmit = (data) => {
-        alert(recipe?.Id);
         let recipeDate = {
-            Id: recipe?.Id,
-            Name: data.Name, UserId: user.Id, CategoryId: data.CategoryId, Img: data?.Img,
+            Name: data.Name, UserId: user.data.Id, CategoryId: data.CategoryId, Img: data?.Img,
             Duration: data.Duration, Difficulty: data.Difficulty, Description: data.Description,
             Ingrident: data.Ingrident, Instructions: data.Instructions
         }
-        let recipeEdit;
-        alert("0");
+        console.log("recipe to send", recipeDate)
         if (!recipe) {
-            alert("1");
             axios.post("http://localhost:8080/api/recipe", recipeDate)
                 .then(d => {
                     recipeEdit = d.data;;
-                    dispatch({ type: action.ADD_RECIPE, payload: recipeEdit })
-                    alert("2");
+                    dispatch({ type: action.ADD_RECIPE, data: recipeEdit })
 
                 }).catch((e) => {
-                    alert(e.response?.data + " " + recipeDate);
-                    alert("3");
-
+        console.log("ERROR to send", e)
+                    
+                    // alert(e.response?.data + " " + recipeDate);
                 })
         }
         else {
+            // recipe
             axios.post('http://localhost:8080/api/recipe/edit', recipeDate).
                 then(x => {
                     recipeEdit = x
-                    alert("4");
                 })
                 .catch(x => {
-                    alert(x.response?.date)
-                    alert("5");
+                    // alert(x.response?.date)
                 })
         }
-        navigate('/allRecipe');
+        // navigate('/allRecipe');
     }
-
     return (
-        <>{user === null ? navigate('/') : console.log(user)}
+        <>{user === null ? navigate('/') :<></>}
             <Form onSubmit={handleSubmit(onSubmit)} >
                 <Form.Field>
                     <label>שם המתכון</label>
@@ -162,7 +157,7 @@ const AddRecipe = () => {
                     {Instructions?.map((item, index) =>
                         <FormGroup key={index}>
                             <Form.Field>
-                                <InputRef placeholder="הכנס הוראה" {...register(`Instructions.${index}.Name`)} defaultValue={Instructions.Name} />
+                                <InputRef placeholder="הכנס הוראה" {...register(`Instructions.${index}`)} />
                             </Form.Field>
                             <Button onClick={() => removeInstructions(index)}>
                                 <Icon name="trash alternate" />
@@ -172,7 +167,7 @@ const AddRecipe = () => {
                 </div>
                 <button onClick={() => appendInstructions({ Instructions: "" })}>הוספת הוראה</button>
                 <br />
-                <button type='submit' onClick={() => console.log("send recipe"+recipe )}>שמירת מתכון</button>
+                <button type='submit' onClick={() => console.log(errors )}>שמירת מתכון</button>
             </Form>
         </>
     );

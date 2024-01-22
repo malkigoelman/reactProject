@@ -3,33 +3,27 @@ import { useDispatch, useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom";
 import { Button, Card, CardGroup, Header, Segment, Image, CardContent, CardHeader, CardDescription, Icon, SegmentGroup, ButtonContent } from "semantic-ui-react";
 import * as actions from "../store/action";
+import * as shopping from '../service/serviceShopping';
 
-
-const Products = ({Name, Count, Type}) => {
+const Products = ({ Name, Count, Type }) => {
+    console.log("products", Name, Count, Type);
     const user = useSelector(state => state.user);
     const ListShopping = useSelector(state => state.ListShopping);
     const dispatch = useDispatch();
+    console.log("Products");
     return <>
         <Segment>
             <Button onClick={() => {
                 let pro = ListShopping.findIndex(x => x.Name == Name);
-                axios.post('http://localhost:8080/api/bay', { Name: Name, Count: 1, UserId: user.Id })
-                    .then(x => {
-                        console.log("ok")
-                        x < 0 ?
-                            dispatch({ type: actions.ADD_PRODUCT, data: x.data }) :
-                            dispatch({ type: actions.APDATE_PRODUCT, data: x.data, index: pro })
-                    })
-                    .catch(y => console.log(y.response))
+                        pro >= 0 ?
+                            dispatch(shopping.updateProduct({Name:Name,Count:1,UserId:user.id},pro)) :
+                            dispatch(shopping.addProduct({Name:Name,Count:1,UserId:user.Id}));
             }}>
-                <ButtonContent visible>
-                    <Icon name='plus' />
-                </ButtonContent>
-                <ButtonContent hidden>
-                    <Icon name='shopping cart' />
-                </ButtonContent>
+
+                <ButtonContent visible><Icon name='plus' /> </ButtonContent>
+                <ButtonContent hidden><Icon name='shopping cart' /></ButtonContent>
             </Button>
-            <span>{"  " + Count + "  " + Type + "  " + Name + "  "}</span>
+            <span>{"     " + Count + " " + Type + "  " + Name + "  "}</span>
         </Segment>
     </>
 }
@@ -42,7 +36,7 @@ const RecipePage = () => {
     const ListDifficult = useSelector(state => state.Difficulty)
     const dispatch = useDispatch();
     return <>
-        {user === null ? navigate('/') : console.log(user)}
+        {user === null ? navigate('/') : null}
         <div>
             <Card>
                 <Header >{recipe.Name}</Header>
@@ -68,10 +62,11 @@ const RecipePage = () => {
                     <CardContent>
                         <Header>רכיבים</Header>
                         <SegmentGroup>
-                            {recipe?.Ingrident?.map((i, index) => {
+                            {recipe?.Ingrident?.map((i, index) =>
                                 // console.log(i.Name+i.Count+i.Type);
-                                <Products  Name={i.Name} Count={i.Count} Type={i.Type} />
-                            })}
+                                // <Products />
+                                <Products key={index} Name={i.Name} Count={i.Count} Type={i.Type} />
+                            )}
                         </SegmentGroup>
                         <Header>הוראות הכנה</Header>
                         <SegmentGroup>
